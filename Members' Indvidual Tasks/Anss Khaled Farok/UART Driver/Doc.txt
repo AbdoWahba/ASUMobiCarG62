@@ -1,0 +1,5 @@
+void UART_Init(void);  // initialize UART and set bauderate to 9600
+
+void UART_Send(unsigned char data); // Send data through TX
+
+unsigned char UART_recieve(void);  // return received data through RX
