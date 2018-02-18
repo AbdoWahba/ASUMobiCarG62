@@ -2,12 +2,8 @@
  * UART.h
  *
  * Created: 2/19/2018 12:27:16 AM
- *  Author: Ahmed
- */ 
-/*
-UART Driver written for ATMEGA32 Microcontroller
-Author: Ahmed Nasr
-
+  * UART Driver written for ATMEGA32 Microcontroller
+  * Author: Ahmed Nasr
 */
 
 #ifndef UART_H_
