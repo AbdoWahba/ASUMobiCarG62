@@ -4,7 +4,11 @@
  * Created: 2/19/2018 12:27:16 AM
  *  Author: Ahmed
  */ 
+/*
+UART Driver written for ATMEGA32 Microcontroller
+Author: Ahmed Nasr
 
+*/
 
 #ifndef UART_H_
 #define UART_H_
@@ -21,7 +25,8 @@
 #define BAUD_RATE 115200
 #define UBRR_VALUE (F_CPU / ((16 * BAUD_RATE) + 1))
 
-/******************** Functions **************************/
+
+/******************** Prototypes **************************/
 
 void UART_init();
 void UART_sendByte(uint8_t data);

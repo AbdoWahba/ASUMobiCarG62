@@ -14,7 +14,7 @@
 	 /* The function initializes the UART module 
 	 * Enable Transimiting and Receiving
 	 * No Parity check - 8 bit data in the frame
-	 * 1 stop bit
+	 * only one stop bit
 	 * set BAUD Rate
 	 */
 	 UCSRB = (1 << TXEN) | (1 << RXEN);
