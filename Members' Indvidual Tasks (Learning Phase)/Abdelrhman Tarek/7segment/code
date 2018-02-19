@@ -1,0 +1,42 @@
+#define F_CPU 1000000UL
+#include <avr/io.h>
+#include <util/delay.h>
+int main(void)
+{
+	DDRA =0b11111111;
+	while(1)
+	{
+		PORTA = 0b01000000; // Number 0
+		_delay_ms(1000);
+		PORTA = 0b01001111; // Number 1
+		_delay_ms(1000);
+		PORTA = 0b00100100; // Number 2
+		_delay_ms(1000);
+		PORTA = 0b00110000; // Number 3
+		_delay_ms(1000);
+		PORTA = 0b00011001; // Number 4
+		_delay_ms(1000);
+		PORTA = 0b00010010; // Number 5
+		_delay_ms(1000);
+		PORTA = 0b00000010; // Number 6
+		_delay_ms(1000);
+		PORTA = 0b01111000; // Number 7
+		_delay_ms(1000);
+		PORTA = 0b00000000; // Number 8
+		_delay_ms(1000);
+		PORTA = 0b00010000; // Number 9
+		_delay_ms(1000);
+		PORTA = 0b10001000; // Letter A
+		_delay_ms(1000);
+		PORTA = 0b11000110; // Letter C
+		_delay_ms(1000);
+		PORTA = 0b10001110; // Letter F
+		_delay_ms(1000);
+		PORTA = 0b11000111; // Letter L
+		_delay_ms(1000);
+		PORTA = 0b10001001; // Letter H
+		_delay_ms(1000);
+	}
+	return 0;
+}
+
