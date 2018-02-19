@@ -1,0 +1,37 @@
+/*
+ * traffic light.c
+ * red (on) 11 sec
+ * yellow (on) 4 sec , flashing 5 times.
+ *green (on) 11 sec.
+ *whole cicle operation 26 sec.
+ * Author : karim hefnawy
+ */ 
+#define F_CPU 1000000UL
+#include <avr/io.h>
+#include <util/delay.h>
+
+
+int main(void)
+{
+    /* code for traffic light with period 26sec */
+	
+	DDRA = 0b00000111;
+	
+    while (1) 
+    {
+		PORTA = 0b00000001;
+		_delay_ms(11000);
+		
+		for (int i=0;i<5;i++)
+		{
+			PORTA = 0b00000010;
+			_delay_ms(400);
+			PORTA = 0b00000000;
+			_delay_ms(400);
+		}
+		
+		PORTA = 0b00000100;
+		_delay_ms(11000);
+    }
+	return 0;
+}
