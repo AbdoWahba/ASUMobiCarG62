@@ -19,7 +19,7 @@ RC car project supervised by Dr Mohamed Sobh and control components course (FOE_
  
  - Karim Mohamed Kamal Hefnawy
  
- - Akrm Mohamed Ahmed El-Hnainy
+ - Akrm Ahmed Mohamed El-Gnainy
  
  - Abdelhafiz Islam EL-Din
  
