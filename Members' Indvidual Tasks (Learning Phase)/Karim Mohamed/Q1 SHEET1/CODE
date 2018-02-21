@@ -1,0 +1,23 @@
+/*
+ * Q1 sheet 1.c
+ *clk pulse with duty 25% and T=2 sec
+ * Created: 21/02/2018 11:03:18 م
+ * Author :karim hefnawy
+ */ 
+#define F_CPU 1000000ul
+#include <util/delay.h>
+#include <avr/io.h>
+
+
+int main(void)
+{
+	DDRA |=(1<<PA0);
+    while (1) 
+    {
+		PORTA |=(1<<PA0);
+		_delay_ms(500);
+		PORTA &=~(1<<PA0);
+		_delay_ms(1500);
+    }
+}
+
