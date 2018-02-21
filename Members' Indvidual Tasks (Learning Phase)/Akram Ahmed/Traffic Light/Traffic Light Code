@@ -1,0 +1,24 @@
+
+#define F_CPU_1000000UL
+#include <avr/io.h>
+#include <avr/delay.h>
+
+int main(void)
+{
+	DDRA=0b00000111;
+	while (1)
+	{
+		PORTA=0b00000001;
+		_delay_ms(3000);
+		for(int i=0 ; i<3 ; i++)
+		{
+			PORTA=0b00000010;
+			_delay_ms(500);
+			PORTA=0b00000000;
+			_delay_ms(500);
+		}
+		PORTA=0b00000100;
+		_delay_ms(3000);
+	}
+	return 0;
+}
