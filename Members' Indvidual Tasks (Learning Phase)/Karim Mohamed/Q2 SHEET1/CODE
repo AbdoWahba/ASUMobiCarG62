@@ -1,0 +1,39 @@
+/*
+ * Q2 sheet 1.c
+ * BOUANCING LIGHT BETTWEN 4 LEDS , EVRY LED LIGHT FOR 1 SEC ( MORE DETAILS IN SHEET 1 Q 2 ).
+ * Created: 21/02/2018 11:15:18 م
+ * Author : KARIM HEFNAWY
+ */ 
+#define F_CPU 1000000ul
+#include <util/delay.h>
+#include <avr/io.h>
+
+
+int main(void)
+{
+	
+	DDRA |=(1<<PA4)|(1<<PA5)|(1<<PA6)|(1<<PA7); // MAKE PIN 4,5,6 AND 7 AS AN OUPPUT PORTS
+	
+		while (1) 
+			{
+				
+				for (uint8_t i=4;i<8;i+=1) // LOOP TO MAKE LEDS TURNS ON EACH FOR 1 SEC START FROM LED PIN4 TO LED PIN7
+				
+				{
+					PORTA |=(1<<i); // HIGH OUTPUT TURN ON LED
+					_delay_ms(1000);
+					PORTA &=~(1<<i);// LOW OUTPUT TURN OF LED
+				}
+				
+				for (uint8_t j=6;j>4;j-=1) //LOOP TO MAKE LEDS TURNS ON EACH FOR 1 SEC START FROM LED PIN6 TO LED PIN5
+				
+				{
+					PORTA |=(1<<j); // HIGH OUTPUT 
+					_delay_ms(1000);
+					PORTA &=~(1<<j); // LOW OUTPUT TURN OF LED
+				}
+				
+				
+			}
+}
+
