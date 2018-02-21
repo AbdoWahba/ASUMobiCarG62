@@ -1,0 +1,17 @@
+#define F_CPU_1000000UL
+#include <avr/io.h>
+#include <avr/delay.h>
+
+
+int main(void)
+{
+	DDRA|=(1<<PINA0);
+    while (1) 
+    {
+		PORTA|=(1<<PINA0);
+		_delay_ms(500);
+		PORTA&=~(1<<PINA0);
+		_delay_ms(1500);
+    }
+	return 0;
+}
