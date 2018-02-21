@@ -31,7 +31,7 @@ int main(void)
 		
 		PORTA |=(1<<PA2); // TUEN ON PORT PA2 FOR 11 SEC
 		_delay_ms(11000);
-		PORTA &=~(1<<PA2);// TUEN OFF PORT PA1
+		PORTA &=~(1<<PA2);// TUEN OFF PORT PA2
     }
 	return 0;
 }
