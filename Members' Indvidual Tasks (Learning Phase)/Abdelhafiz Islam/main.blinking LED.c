@@ -13,7 +13,7 @@ DDRA=0b00000001 ;       // Insert code
     {
         PORTA=0b00000001;
         _delay_ms(500);
-        PORTA=0b00000001;
+        PORTA=0b00000000;
         _delay_ms(500);
     }
 return 0 ;
