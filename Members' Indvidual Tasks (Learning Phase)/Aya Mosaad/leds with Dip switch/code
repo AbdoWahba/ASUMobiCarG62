@@ -1,0 +1,27 @@
+* Dip switch.c
+ *
+ * Created: 2/28/2018 1:11:18 PM
+ * Author : AyaMosaad
+ */ 
+
+
+#define F_CPU 1000000UL
+#include <avr/io.h>
+#include <math.h>
+
+int main(void)
+{
+	uint8_t  value ;
+	DDRA  = 0b00000000 ;
+	PORTA = 0b11111111 ;
+	
+	DDRC = 0b11111100;
+
+    while (1) 
+    {
+		 value = PINA ;
+		 PORTC = value * 4  ;
+	}
+	return 0;
+
+}
