@@ -9,7 +9,7 @@ int main(void)
 	{
 		for(count = 0; count <= 3; count++)
 		{
-			PORTA = (1 << counter);
+			PORTA = (1 << count);
 			_delay_ms(500);
 		}
 	}
