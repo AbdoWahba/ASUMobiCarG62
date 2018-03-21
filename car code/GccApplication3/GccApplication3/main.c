@@ -41,7 +41,8 @@ int main(void)
 			else{
 				Normal(motionState);
 			}
-				
+			
+			
 		
     }
 }
@@ -66,26 +67,42 @@ void Normal(char motionState){
 	}
 
 
-	if( IR_read(PC4,PC5,PC6) == 0 ) {
-		Motor_Right();
-		_delay_ms(250);
-	}
-	if(IR_read(PC4,PC5,PC6) == -1){
+	if( !(PINA&(1<<PC4)) ){
+		
 		Motor_Left();
 		_delay_ms(250);
+		
 	}
+	
+	if( !(PINA&(1<<PC6)) ){
+		
+		Motor_Right();
+		_delay_ms(250);
+		
+	}
+
+/*
+// 	if( IR_Read(PC4,PC5,PC6) == -1 ) {
+// 		Motor_Right();
+// 		_delay_ms(250);
+// 	}
+// 	if(IR_Read(PC4,PC5,PC6) == 1){
+// 		Motor_Left();
+// 		_delay_ms(250);
+// 	}
+*/
 }
 
 void Line(){
-	if(IR_read(PC4,PC5,PC6) == 1){
+	if(IR_Read(PC4,PC5,PC6) == 0){
 		Motor_setSpeed(200,200);
 		Motor_Forward();
 	}
-	else if(IR_read(PC4,PC5,PC6) == 0){
+	else if(IR_Read(PC4,PC5,PC6) == -1){
 		Motor_setSpeed(100,100);
 		Motor_Left();
 	}
-	else if(IR_read(PC4,PC5,PC6) == -1){
+	else if(IR_Read(PC4,PC5,PC6) == 1){
 		Motor_setSpeed(100,100);
 		Motor_Right();
 	}
