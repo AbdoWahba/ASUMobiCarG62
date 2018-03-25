@@ -25,19 +25,23 @@ int main(void)
 	
 	
 	char motionState	= 'S';
-	char carState		= 'N';
+	char carState		= 'W'; /* W -> Normal */ /* U -> Line */
     while (1) 
     {
 
 			
-			if( UART_recieve() == 'N' | UART_recieve() == 'L')
+			if( UART_recieve() == 'W' | UART_recieve() == 'U')
 				{ carState = UART_recieve(); }
 			else { motionState = UART_recieve(); }
 			
-			if(carState == 'L'){
+			
+			
+			if(carState == 'U'){
 				Line();
 			}
-			
+			else if(carState == 'w' || carState == 'u') {
+				Motor_Stop();
+			}
 			else{
 				Normal(motionState);
 			}
