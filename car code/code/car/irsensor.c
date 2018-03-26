@@ -5,7 +5,7 @@
  *  Author: Akram
  */
 
-#include "IRCode.h"
+#include "irsensor.h"
 
 int8_t IR_Read (uint8_t L /*left sensor*/ , uint8_t M /*mid sensor*/ , uint8_t R /*right sensor*/)
 {

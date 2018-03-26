@@ -30,7 +30,7 @@ int main(void)
     {
 
 			
-			if( UART_recieve() == 'W' | UART_recieve() == 'U')
+			if( UART_recieve() == 'W' || UART_recieve() == 'U')
 				{ carState = UART_recieve(); }
 			else { motionState = UART_recieve(); }
 			

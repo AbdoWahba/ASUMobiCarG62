@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <WORKSPACE>
  <FRAME activewindow="0">
-  <PLACEMENT>2c00000002000000030000000083ffff0083ffffffffffffffffffff9b00000004000000d306000004040000</PLACEMENT>
+  <PLACEMENT>2c00000002000000020000000083ffff0083ffffffffffffffffffff9b00000004000000d306000004040000</PLACEMENT>
   <WINDOW type="default" module="ISIS"/>
   <WINDOW type="default" module="ARES"/>
  </FRAME>
@@ -38,7 +38,7 @@
    <POPUP w="16" x="177" flags="0000000a" y="268" h="32" pid="7" iid="1">
     <PROPERTIES/>
    </POPUP>
-   <POPUP w="16" x="197" flags="80000000" y="288" h="32" pid="14" iid="1">
+   <POPUP w="16" x="197" flags="00000000" y="288" h="32" pid="14" iid="1">
     <PROPERTIES/>
    </POPUP>
    <POPUP w="16" x="217" flags="0000000a" y="308" h="32" pid="4" iid="1">
@@ -66,7 +66,7 @@
    <POPUP w="16" x="317" flags="0000000a" y="408" h="32" pid="7" iid="14">
     <PROPERTIES/>
    </POPUP>
-   <POPUP w="16" x="337" flags="80000000" y="428" h="32" pid="14" iid="14">
+   <POPUP w="16" x="337" flags="00000000" y="428" h="32" pid="14" iid="14">
     <PROPERTIES/>
    </POPUP>
    <POPUP w="16" x="357" flags="0000000a" y="448" h="32" pid="4" iid="14">
