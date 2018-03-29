@@ -1,31 +1,64 @@
 /*
- * uart.c
+ * UART.c
  *
- * Created: 2018-02-25 7:44:54 PM
- *  Author: anssk
+ * Created: 3/12/2018 11:22:03 PM
+ *  Author: Ahmed
  */ 
 
 #include "UART.h"
 
+#define F_CPU 16000000
 
+#define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 8UL))) - 1)
 
-
-void UART_Init()
+void UART_init(void)
 {
-	UBRRL = (uint8_t) BaudeRate;
-	UBRRH = (uint8_t) (BaudeRate >> 8);
+	/* U2X = 1 for double transmission speed */
+	UCSRA = (1<<U2X);
+ 
+	UCSRB = (1<<RXEN) | (1<<TXEN);
+		
+	UCSRC = (1<<URSEL) | (1<<UCSZ0) | (1<<UCSZ1); 
 	
-	UCSRB |= (1<<RXEN) | (1<<TXEN);
-	UCSRC |= (3<<UCSZ0);
-	
+	/* First 8 bits from the BAUD_PRESCALE inside UBRRL and last 4 bits in UBRRH*/
+	UBRRH = BAUD_PRESCALE>>8;
+	UBRRL = BAUD_PRESCALE;
 }
-
-void UART_Send(uint8_t data ){
-	while(! ((UCSRA) & (1<<UDRE) ));
+	
+void UART_sendByte(const uint8_t data)
+{
+	while(!(UCSRA & (1 << UDRE))){}
+ 
 	UDR = data;
 }
 
-char UART_recieve(void){
-	while(!((UCSRA) & (1<<RXC)));
-	return UDR;
+uint8_t UART_recieveByte(void)
+{
+	
+	while(!(UCSRA & (1 << RXC))){}
+
+    return UDR;		
+}
+
+void UART_sendString(const uint8_t *Str)
+{
+	uint8_t i = 0;
+	while(Str[i] != '\0')
+	{
+		UART_sendByte(Str[i]);
+		i++;
+	}
+
+}
+
+void UART_receiveString(uint8_t *Str)
+{
+	uint8_t i = 0;
+	Str[i] = UART_recieveByte();
+	while(Str[i] != '#')
+	{
+		i++;
+		Str[i] = UART_recieveByte();
+	}
+	Str[i] = '\0';
 }

@@ -1,27 +1,30 @@
 /*
- * uart.h
+ * UART.h
  *
- * Created: 2018-02-25 7:45:06 PM
- *  Author: anssk
+ * Created: 3/12/2018 11:22:18 PM
+ *  Author: Ahmed
  */ 
 
 
 #ifndef UART_H_
 #define UART_H_
 
-#define  F_CPU 16000000UL
-#define Baude 9600
-#define BaudeRate ((F_CPU)/(Baude*16UL)-1)
-
-#include <stdint.h>
 #include <avr/io.h>
 
-void UART_Init();
 
-void UART_Send(uint8_t data );
+/* UART Driver Baud Rate */
+#define USART_BAUDRATE 9600
 
-char UART_recieve(void);
+/************************** Functions Prototypes ***********************/
+void UART_init(void);
 
+void UART_sendByte(const uint8_t data);
+
+uint8_t UART_recieveByte(void);
+
+void UART_sendString(const uint8_t *Str);
+
+void UART_receiveString(uint8_t *Str); // Receive until #
 
 
 

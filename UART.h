@@ -1,37 +1,30 @@
 /*
  * UART.h
  *
- * Created: 2/19/2018 12:27:16 AM
-  * UART Driver written for ATMEGA32 Microcontroller
-  * Author: Ahmed Nasr
-*/
+ * Created: 3/12/2018 11:22:18 PM
+ *  Author: Ahmed
+ */ 
+
 
 #ifndef UART_H_
 #define UART_H_
 
-
 #include <avr/io.h>
-#include <util/delay.h>
-
-#ifndef F_CPU
-#define F_CPU 16000000UL
-#endif
 
 
-#define BAUD_RATE 115200
-#define UBRR_VALUE (F_CPU / ((16 * BAUD_RATE) + 1))
+/* UART Driver Baud Rate */
+#define USART_BAUDRATE 9600
 
+/************************** Functions Prototypes ***********************/
+void UART_init(void);
 
-/******************** Prototypes **************************/
+void UART_sendByte(const uint8_t data);
 
-void UART_init();
-void UART_sendByte(uint8_t data);
-uint8_t UART_receiveByte();
-void UART_sendString(const uint8_t *str);
-void UART_receiveString(uint8_t *str);
+uint8_t UART_recieveByte(void);
 
+void UART_sendString(const uint8_t *Str);
 
-
+void UART_receiveString(uint8_t *Str); // Receive until #
 
 
 
