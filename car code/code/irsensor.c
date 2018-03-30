@@ -12,7 +12,7 @@ int8_t IR_Read (uint8_t L /*left sensor*/ , uint8_t M /*mid sensor*/ , uint8_t R
 	
 	if ((!(MyPort&(1<<L))&& !(MyPort&(1<<M)) && MyPort&(1<<R)) || (!(MyPort&(1<<L))&& MyPort&(1<<M) && MyPort&(1<<R)))
 	{
-		return -1 ;
+		return 2 ;
 	}
 	else if ((MyPort&(1<<L)&& !(MyPort&(1<<M)) && !(MyPort&(1<<R))) || (MyPort&(1<<L)&& MyPort&(1<<M) && !(MyPort&(1<<R))))
 	{

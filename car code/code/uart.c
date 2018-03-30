@@ -7,7 +7,10 @@
 
 #include "UART.h"
 
-#define F_CPU 16000000
+#ifndef F_CPU
+#define F_CPU 16000000UL
+#endif
+
 
 #define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 8UL))) - 1)
 
@@ -39,6 +42,8 @@ uint8_t UART_recieveByte(void)
 
     return UDR;		
 }
+
+
 
 void UART_sendString(const uint8_t *Str)
 {
