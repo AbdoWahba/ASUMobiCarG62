@@ -10,7 +10,7 @@
 #define UART_H_
 
 #include <avr/io.h>
-
+#include <avr/interrupt.h>
 
 /* UART Driver Baud Rate */
 #define USART_BAUDRATE 9600
@@ -18,12 +18,9 @@
 volatile uint8_t data = 0;
 
 /************************** Functions Prototypes ***********************/
+
 void UART_init(void);
-
 void UART_sendByte(const uint8_t data);
-
-
-
 void UART_sendString(const uint8_t *Str);
 
 
