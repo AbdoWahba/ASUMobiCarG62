@@ -30,7 +30,7 @@ void Motor_Stop(){
 	PORT_MOTOR &= ~(1<<motorB2);
 }
 
-void Motor_Forward(){
+void Motor_Backward(){
 	PORT_MOTOR |= (1<<motorA2);
 	PORT_MOTOR &= ~(1<<motorA1);
 	
@@ -38,18 +38,9 @@ void Motor_Forward(){
 	PORT_MOTOR &= ~(1<<motorB2);
 }
 
-void Motor_Backward(){
+void Motor_Forward(){
 	PORT_MOTOR |= (1<<motorA1);
 	PORT_MOTOR &= ~(1<<motorA2);
-	
-	PORT_MOTOR |= (1<<motorB2);
-	PORT_MOTOR &= ~(1<<motorB1);
-
-}
-
-void Motor_Right(){
-	PORT_MOTOR |= (1<<motorA2);
-	PORT_MOTOR &= ~(1<<motorA1);
 	
 	PORT_MOTOR |= (1<<motorB2);
 	PORT_MOTOR &= ~(1<<motorB1);
@@ -57,11 +48,20 @@ void Motor_Right(){
 }
 
 void Motor_Left(){
+	PORT_MOTOR &=~ (1<<motorA2);
 	PORT_MOTOR |= (1<<motorA1);
-	PORT_MOTOR &= ~(1<<motorA2);
 	
-	PORT_MOTOR |= (1<<motorB1);
-	PORT_MOTOR &= ~(1<<motorB2);
+	PORT_MOTOR &=~ (1<<motorB2);
+	PORT_MOTOR |=(1<<motorB1);
+
+}
+
+void Motor_Right(){
+	PORT_MOTOR &=~ (1<<motorA1);
+	PORT_MOTOR |=(1<<motorA2);
+	
+	PORT_MOTOR &=~ (1<<motorB1);
+	PORT_MOTOR |=(1<<motorB2);
 
 }
 

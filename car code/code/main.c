@@ -8,6 +8,7 @@
 #define F_CPU 16000000UL
 #include <avr/io.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
 #include "uart.h"
 #include "irsensor.h"
 #include "motion.h"
@@ -16,6 +17,7 @@
 void Normal(char motionState);
 void Line();
 
+volatile uint8_t data;
 
 int main(void)
 {
@@ -24,29 +26,30 @@ int main(void)
 	Motor_Init(PC0,PC1,PC2,PC3);
 	Motor_setSpeed(120,120);
 	
+	sei();
 	
-	
-	uint8_t received	= 'S';
 	char carState	= 'W'; /* W -> Normal */ /* U -> Line */
     while (1) 
     {
 
-			received = UART_recieveByte();
 			
-			if( received == 'W'){
+			/* Mode select */
+			if( data == 'W'){
 					carState = 'W';
 			}
-			else if ( received == 'w'){
+			else if ( data == 'w'){
 				 carState = 'w' ;
 			}
 	
 			
-			if( (received >= '0' && received <= '9') || received == 'q'){
-				if(received == 'q') {
+			
+			/* Speed select */
+			if( (data >= '0' && data <= '9') || data == 'q'){
+				if(data == 'q') {
 					Motor_setSpeed(255,255);
 				}
 				else {
-					uint8_t x = 25.5 * received;
+					uint8_t x = 25.5 * data;
 					Motor_setSpeed(x,x);
 				}
 			}
@@ -58,7 +61,15 @@ int main(void)
 				Line();
 			}
 			else{
-				Normal(received);
+				
+				if( !(PINC&(1<<PC4)) || !(PINC&(1<<PC5)) ){
+					Motor_Backward();
+					//_delay_ms(250);
+				}
+				else{
+					Motor_Stop();
+					Normal(data);
+				}
 			}
 			
 			/* ULTRASONIC && SERVO */
@@ -73,6 +84,8 @@ void Normal(char motionState){
 		Motor_Forward();
 	}
 	else if(motionState == 'B' ){
+		Motor_Stop();
+		
 		Motor_Backward();
 	}
 	else if(motionState == 'R' ){
@@ -121,3 +134,12 @@ void Line(){
 	}
 }
 
+
+
+/* ********************** Interrupts ************************ */ 
+
+/* UART */
+ISR(USART_RXC_vect)
+{
+	data = UDR;
+}
