@@ -16,13 +16,14 @@ void UART_init(void)
 	/* U2X = 1 for double transmission speed */
 	UCSRA = (1<<U2X);
  
-	UCSRB = (1<<RXEN) | (1<<TXEN);
+	UCSRB = (1<<RXEN) | (1<<TXEN) | (1 << RXCIE); // Enable Transmission, Receive and Receive Interrupt
 		
 	UCSRC = (1<<URSEL) | (1<<UCSZ0) | (1<<UCSZ1); 
 	
 	/* First 8 bits from the BAUD_PRESCALE inside UBRRL and last 4 bits in UBRRH*/
 	UBRRH = BAUD_PRESCALE>>8;
 	UBRRL = BAUD_PRESCALE;
+
 }
 	
 void UART_sendByte(const uint8_t data)
@@ -32,13 +33,7 @@ void UART_sendByte(const uint8_t data)
 	UDR = data;
 }
 
-uint8_t UART_recieveByte(void)
-{
-	
-	while(!(UCSRA & (1 << RXC))){}
 
-    return UDR;		
-}
 
 void UART_sendString(const uint8_t *Str)
 {
@@ -51,14 +46,14 @@ void UART_sendString(const uint8_t *Str)
 
 }
 
-void UART_receiveString(uint8_t *Str)
+
+
+
+/* Interrupt Function */ 
+
+ISR(USART_RXC_vect) 
 {
-	uint8_t i = 0;
-	Str[i] = UART_recieveByte();
-	while(Str[i] != '#')
-	{
-		i++;
-		Str[i] = UART_recieveByte();
-	}
-	Str[i] = '\0';
+	data = UDR;
+
+
 }

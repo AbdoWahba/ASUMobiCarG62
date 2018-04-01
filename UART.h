@@ -15,16 +15,18 @@
 /* UART Driver Baud Rate */
 #define USART_BAUDRATE 9600
 
+volatile uint8_t data = 0;
+
 /************************** Functions Prototypes ***********************/
 void UART_init(void);
 
 void UART_sendByte(const uint8_t data);
 
-uint8_t UART_recieveByte(void);
+
 
 void UART_sendString(const uint8_t *Str);
 
-void UART_receiveString(uint8_t *Str); // Receive until #
+
 
 
 
