@@ -11,7 +11,6 @@
 
 #define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 8UL))) - 1)
 
-
 void UART_init(void)
 {
 	/* U2X = 1 for double transmission speed */
@@ -51,3 +50,10 @@ void UART_sendString(const uint8_t *Str)
 
 
 /* Interrupt Function */ 
+
+ISR(USART_RXC_vect) 
+{
+	data = UDR;
+
+
+}

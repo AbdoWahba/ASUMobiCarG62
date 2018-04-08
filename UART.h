@@ -15,7 +15,7 @@
 /* UART Driver Baud Rate */
 #define USART_BAUDRATE 9600
 
-volatile uint8_t data = 0;
+
 
 /************************** Functions Prototypes ***********************/
 

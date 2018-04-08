@@ -8,6 +8,8 @@
 
 #include "PWM.h"
 
+
+
 void analogWrite(uint8_t pin, uint8_t duty_cycle) {
 	/* - Initialization:
 					- Set desired pin to be output pin.
@@ -21,13 +23,14 @@ void analogWrite(uint8_t pin, uint8_t duty_cycle) {
 	if (pin == 1) {
 		DDRD |= (1 << PIND5);
 		TCCR1A |= (1 << COM1A1) | (1 << WGM10);
-		TCCR1B |= (1 << WGM12) | (1 << CS11);
+		TCCR1B |= (1 << WGM12) | (1 << CS11) | (1 << CS10);
 		OCR1A = duty_cycle;
 	}
 	else if (pin == 2) {
+
 		DDRD |= (1 << PIND4);
 		TCCR1A |= (1 << COM1B1) | (1 << WGM10);
-		TCCR1B |= (1 << WGM12) | (1 << CS11);
+		TCCR1B |= (1 << WGM12) | (1 << CS11) | (1 << CS10);
 		OCR1B = duty_cycle;
 	}
 
