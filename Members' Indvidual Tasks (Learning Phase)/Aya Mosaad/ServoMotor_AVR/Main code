@@ -1,0 +1,51 @@
+/*
+ * servoMotor_AVR.c
+ *
+ * Created: 1/4/2018 2:26:37 PM
+ * Author : AyaMosaad.
+ */
+
+#include <avr/io.h>
+#include <util/delay.h>
+int main(void)
+{
+	/*
+	_CS10 IS SET TO BE clkI/O/1 (No prescaling)
+	_non-inverted mode, the COM1A1 is set and COM1A0 is not set.
+	_Waveform Generation Mode " WGM11 ,WGM12 , WGM13 is set "-> Fast PWM , ICR is top.
+	_ICR1 IS INPUT REG
+	_OCR1A IS OUTPUT REGISTER
+	*/
+
+    TCCR1A |= 1<<WGM11 | 1<<COM1A1 ; 
+    TCCR1B |= 1<<WGM13 | 1<<WGM12 | 1<<CS10;
+
+    DDRD |= (1<< PD5);      /* PD5 is set "OC1A*/
+
+
+	ICR1 = 4999;          /*ICR1 = F_CPU / (Servo acceptable Hz value); */  
+	OCR1A = ICR1 - 2000;     /* OCR1A = ICR1 - (Pulse Width);*/
+
+	while (1)
+	{
+		 
+		  /* 
+		    _at the direction of angle in the first order to OCR1A is at clockwise and second order reverse the first direction 
+		    _we can send angle to register at range 3000~3999 
+		 */
+		 
+		 
+	 	OCR1A = ICR1 - 3000 ;       /* angle -90 */
+	  	_delay_ms(1000);
+	
+		OCR1A = ICR1 - 3500 ;       /* angle 00 */
+	    _delay_ms(1000);
+		
+		OCR1A = ICR1 - 3999 ;       /* angle 90 */
+		_delay_ms(1000);
+		
+		OCR1A = ICR1 - 3500 ;       /* angle 00 */
+		_delay_ms(1000);
+	
+	}
+}
