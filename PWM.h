@@ -1,26 +1,24 @@
 /*
  * PWM.h
  *
- * PWM.c
- *
- * Created: 2/27/2018 12:28:28 PM
- *  Author: Ahmed Nasr 
- *  A PWM driver developed and tested for ATMEGA32.
- * The Driver will be serving the car motors Driver
- * Currently works on a 1 MHZ Clock Speed
- * Future Improvements: 
- * 	- Making it portable and independent pf the clock speed
- *
+ * Created: 2018-06-19 3:50:36 PM
+ *  Author: anssk
  */ 
 
 
 #ifndef PWM_H_
 #define PWM_H_
 
+
 #include <avr/io.h>
-#include <util/delay.h>
+#include "MACROS.h"
 
-void analogWrite(uint8_t pin, uint8_t duty_cycle);
+#define		EN_TIMER0		1
+#define		EN_TIMER1		1
+#define		EN_TIMER2		1
 
+void PWM_init();
+
+void analogWrite(uint8_t PIN , uint8_t DC);
 
 #endif /* PWM_H_ */
