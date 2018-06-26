@@ -9,28 +9,35 @@
 #ifndef MOTION_H_
 #define MOTION_H_
 
-#define DDR_MOTOR	DDRC
-#define PORT_MOTOR	PORTC
-
-#define Enable_MOTOR_1  PD5
-#define Enable_MOTOR_2  PD4
-
 #include <avr/io.h>
 #include "PWM.h"
+#include "MACROS.h"
 
-void Motor_Init(uint8_t MotorA1 , uint8_t MotorA2 , uint8_t MotorB1 , uint8_t MotorB2);
+#define MOTOR_DDR		DDRC
+#define MOTOR_PORT		PORTC
 
-void Motor_Stop();
+#define MOTOR1_A		PC0
+#define MOTOR1_B		PC1
 
-void Motor_Forward();
+#define MOTOR2_A		PC2
+#define MOTOR2_B		PC3
 
-void Motor_Backward();
+#define EN_MOTOR1		PB3
+#define EN_MOTOR2		PD7
 
-void Motor_Left();
+void motorPinInit();
 
-void Motor_Right();
+void motorStop();
 
-void Motor_setSpeed(uint8_t Motor1 , uint8_t Motor2);
+void motorForward();
+
+void motorBackword();
+
+void motorLeft();
+
+void motorRight();
+
+void motorSpeedSet(uint8_t leftMotor , uint8_t rightMotor);
 
 
 #endif /* MOTION_H_ */

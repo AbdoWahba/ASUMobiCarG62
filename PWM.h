@@ -13,9 +13,9 @@
 #include <avr/io.h>
 #include "MACROS.h"
 
-#define		EN_TIMER0		1
-#define		EN_TIMER1		1
-#define		EN_TIMER2		1
+#define		EN_TIMER0		0
+#define		EN_TIMER1		0
+#define		EN_TIMER2		0
 
 void PWM_init();
 

@@ -7,65 +7,68 @@
 
 #include "motion.h"
 
-/* Each motor has 2 pin */
-volatile uint8_t  motorA1 
-				, motorA2 
-				, motorB1 
-				, motorB2;
+/*
+//  MOTOR1_A	
+//  MOTOR1_B	
+//  EN_MOTOR1	
+// 
+//  MOTOR2_A	
+//  MOTOR2_B	
+//  EN_MOTOR2	
+*/
 
-void Motor_Init(uint8_t MotorA1 , uint8_t MotorA2 , uint8_t MotorB1 , uint8_t MotorB2){
-	motorA1 = MotorA1 ; motorA2 = MotorA2;
-	motorB1 = MotorB1 ; motorB2 = MotorB2;
+void motorPinInit(){
+	SETBIT( MOTOR_DDR , MOTOR1_A );
+	SETBIT( MOTOR_DDR , MOTOR1_B );
 	
+	SETBIT( MOTOR_DDR , MOTOR2_A );
+	SETBIT( MOTOR_DDR , MOTOR2_B );
+}
 
-	DDR_MOTOR |= ( (1<<motorA1) | (1<<motorA2) | (1<<motorB1) | (1<<motorB2) );
+void motorStop(){
+	CLEARBIT( MOTOR_PORT , MOTOR1_A );
+	CLEARBIT( MOTOR_PORT , MOTOR1_B );
+	
+	CLEARBIT( MOTOR_PORT , MOTOR2_A );
+	CLEARBIT( MOTOR_PORT , MOTOR2_B );
+}
+
+void motorBackword(){
+	CLEARBIT( MOTOR_PORT , MOTOR1_A );
+	SETBIT( MOTOR_PORT , MOTOR1_B );
+	
+	CLEARBIT( MOTOR_PORT , MOTOR2_A );
+	SETBIT( MOTOR_PORT , MOTOR2_B );
+}
+
+void motorForward(){
+	SETBIT( MOTOR_PORT , MOTOR1_A );
+	CLEARBIT( MOTOR_PORT , MOTOR1_B );
+	
+	SETBIT( MOTOR_PORT , MOTOR2_A );
+	CLEARBIT( MOTOR_PORT , MOTOR2_B );
 
 }
 
-void Motor_Stop(){
-	PORT_MOTOR &= ~(1<<motorA1);
-	PORT_MOTOR &= ~(1<<motorA2);
+void motorLeft(){
+	CLEARBIT( MOTOR_PORT , MOTOR1_A );
+	SETBIT( MOTOR_PORT , MOTOR1_B );
 	
-	PORT_MOTOR &= ~(1<<motorB1);
-	PORT_MOTOR &= ~(1<<motorB2);
-}
-
-void Motor_Backward(){
-	PORT_MOTOR |= (1<<motorA2);
-	PORT_MOTOR &= ~(1<<motorA1);
-	
-	PORT_MOTOR |= (1<<motorB1);
-	PORT_MOTOR &= ~(1<<motorB2);
-}
-
-void Motor_Forward(){
-	PORT_MOTOR |= (1<<motorA1);
-	PORT_MOTOR &= ~(1<<motorA2);
-	
-	PORT_MOTOR |= (1<<motorB2);
-	PORT_MOTOR &= ~(1<<motorB1);
+	SETBIT( MOTOR_PORT , MOTOR2_A );
+	CLEARBIT( MOTOR_PORT , MOTOR2_B );
 
 }
 
-void Motor_Left(){
-	PORT_MOTOR &=~ (1<<motorA2);
-	PORT_MOTOR |= (1<<motorA1);
+void motorRight(){
+	SETBIT( MOTOR_PORT , MOTOR1_A );
+	CLEARBIT( MOTOR_PORT , MOTOR1_B );
 	
-	PORT_MOTOR &=~ (1<<motorB2);
-	PORT_MOTOR |=(1<<motorB1);
+	CLEARBIT( MOTOR_PORT , MOTOR2_A );
+	SETBIT( MOTOR_PORT , MOTOR2_B );
 
 }
 
-void Motor_Right(){
-	PORT_MOTOR &=~ (1<<motorA1);
-	PORT_MOTOR |=(1<<motorA2);
-	
-	PORT_MOTOR &=~ (1<<motorB1);
-	PORT_MOTOR |=(1<<motorB2);
-
-}
-
-void Motor_setSpeed(uint8_t Motor1 , uint8_t Motor2){
-	analogWrite( 1, Motor1);
-	analogWrite( 2, Motor2);
+void motorSpeedSet(uint8_t leftMotor , uint8_t rightMotor){
+	analogWrite(EN_MOTOR1 , leftMotor);
+	analogWrite(EN_MOTOR2 , rightMotor);
 }
