@@ -16,12 +16,14 @@
 #include "PWM.h"
 
 /* ******************* PROTOTYPES	******************* */
+void extInterrupt_enable();
 void normalMode(char motionState);
 void lineFollowerMode();
 
 
 /* ******************* GLOBAL VAR	******************* */
-volatile uint8_t UART_RECEVED_DATA;
+volatile uint8_t UART_RECEVED_DATA = 0;
+volatile uint16_t photoInterrupter_counter = 0;
 
 
 
@@ -118,12 +120,29 @@ void lineFollowerMode(){
 	}
 }
 
+void extInterrupt_enable() {
+	/* This function enables all external interrupts
+	*/
+	// Enabling interrupt 0
+	MCUCR |= (1 << ISC00 | (1 << ISC01);
+	GICR |= (1 << INT0);
+
+
+}
+
+
 
 
 /* ********************** Interrupts ************************ */ 
 
 /* ******************* UART INTERRUPT	******************* */
+
 ISR(USART_RXC_vect)
 {
 	UART_RECEVED_DATA = UDR;
+}
+
+ISR(INT0_vect) {
+	photoInterrupter_counter++;
+
 }
