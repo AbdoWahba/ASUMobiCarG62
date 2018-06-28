@@ -40,6 +40,7 @@ volatile uint8_t  I2C_sendingData;
 void I2C_init();
 void I2C_start();
 void I2C_write(uint8_t data);
+uint8_t I2C_read();
 void I2C_write_to(uint8_t address);
 void I2C_read_from(uint8_t address);
 void I2C_stop();

@@ -18,7 +18,6 @@ void I2C_init() {
 */
 
 	TWCR = (1<<TWEN) | (1 << TWIE) | (1 << TWINT) | (1 << TWEA); // Enable I2C
-	
 	TWCR &= ~ (1 << TWSTO);
 	TWCR &= ~ (1 << TWSTA);
 
@@ -33,6 +32,11 @@ void I2C_start() {
 void I2C_write(uint8_t data) {
 
 	I2C_sendingData = data;
+
+}
+
+uint8_t I2C_read() {
+	return I2C_receivedData;
 
 }
 
@@ -57,7 +61,7 @@ void I2C_stop(void) {
 
 
 
-}
+
 
 ISR(TWI_vect) {
 	uint8_t status = TWSR & 0xF8; // Getting the most significant 5 bits in the register.
