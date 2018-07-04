@@ -8,11 +8,11 @@
 #include "photointerrupt.h"
  void int0_Init ()
 {
-	SETBIT( MCUCR , ISC00); 
-	CLEARBIT( MCUCR , ISC01);
-
-	sei();
-	CLEARBIT (DDRD,PD2);
+	/* This function enables all external interrupts
+	*/
+	// Enabling interrupt 0
+	MCUCR |= (1 << ISC00) | (1 << ISC01);
+	
 }
 
 
