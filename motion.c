@@ -50,7 +50,7 @@ void motorForward(){
 
 }
 
-void motorLeft(){
+void motorRight(){
 	CLEARBIT( MOTOR_PORT , MOTOR1_A );
 	SETBIT( MOTOR_PORT , MOTOR1_B );
 	
@@ -59,7 +59,7 @@ void motorLeft(){
 
 }
 
-void motorRight(){
+void motorLeft(){
 	SETBIT( MOTOR_PORT , MOTOR1_A );
 	CLEARBIT( MOTOR_PORT , MOTOR1_B );
 	

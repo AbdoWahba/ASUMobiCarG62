@@ -17,15 +17,23 @@
 #include "photointerrupt.h"
 
 /* ******************* DEFINES	******************* */
-#define CARRADIUS	14
+#define CARWIDTH	14
+#define PI			3.14
+
+#define angleFactor 1.5
 
 
 /* ******************* PROTOTYPES	******************* */
 void normalMode(char motionState);
 void lineFollowerMode();
-void Circle_CCkWise(short R);
-void Circle_CkWise(short R);
-void get_receivedString(uint8_t c);
+void Circle_CCkWise();
+void Circle_CkWise();
+void angle_CW(uint8_t theta);
+void angle_CCW(uint8_t theta);
+void rec();
+void inf();
+
+
 
 
 /* ******************* GLOBAL VAR	******************* */
@@ -33,8 +41,19 @@ volatile uint8_t UART_RECEVED_DATA;
 volatile short pulse_Counter = 0;
 volatile short measuredDistance = 0;
 volatile int requiredDistance = 0;
-volatile uint8_t s[3];
-uint8_t arrCounter = 0;
+volatile uint8_t s[4];
+volatile uint8_t arrCounter = 0;
+volatile uint8_t recFlag = 0;
+volatile uint8_t carMode = 'w';
+		/*
+		*	w		-> Normal mode // Bluetooth mode // Phase 1
+		*	W 'Capital W ' -> Line Follower mode // Phase 2
+		*	U 'Capital U ' -> Distance // Phase 3
+		*	C ''	-> Circle clockwise
+		*	c		-> Circle Counter clockwise
+		*	A		-> angle CW
+		*	a		-> angle CCW
+		*/
 
 
 int main(void)
@@ -49,12 +68,7 @@ int main(void)
 	
 	sei();
 	
-	uint8_t carMode = 'w';
-		/*
-		*	w -> Normal mode // Bluetooth mode // Phase 1
-		*	W 'Capital W ' -> Line Follower mode // Phase 2
-		*	U 'Capital U ' -> Distance // Phase 3
-		*/
+
 	
 	
 	
@@ -67,7 +81,7 @@ int main(void)
 	
 			
 			/* *** Mode Select *** */
-			if( UART_RECEVED_DATA == 'W' || UART_RECEVED_DATA == 'w' ||  UART_RECEVED_DATA == 'U' || UART_RECEVED_DATA == 'C' || UART_RECEVED_DATA == 'O'){
+			if( UART_RECEVED_DATA == 'W' || UART_RECEVED_DATA == 'w' ||  UART_RECEVED_DATA == 'U' || UART_RECEVED_DATA == 'C' || UART_RECEVED_DATA == 'c' || UART_RECEVED_DATA == 'A' || UART_RECEVED_DATA == 'a' || UART_RECEVED_DATA == 'E' || UART_RECEVED_DATA == 'I' ){
 				carMode = UART_RECEVED_DATA;
 			}
 					
@@ -133,14 +147,67 @@ int main(void)
 				
 			}
 			
-			else if(carMode == 'C'){
-				while( UART_RECEVED_DATA == 'C' );
-				Circle_CkWise(UART_RECEVED_DATA);
+			else if(carMode == 'E'){
+				rec();
+				UART_RECEVED_DATA = 'w';
+				motorStop();
 			}
 			
-			else if(carMode == 'O'){
-				while( UART_RECEVED_DATA == 'O' );
-				Circle_CCkWise(UART_RECEVED_DATA);
+			else if(carMode == 'I'){
+				inf();
+			}
+			
+			else if(carMode == 'C'){
+				Circle_CkWise();
+				UART_RECEVED_DATA = 'w';
+			}
+			
+			else if(carMode == 'c'){
+				Circle_CCkWise();
+				UART_RECEVED_DATA = 'w';
+			}
+			
+			else if(carMode == 'A'){
+				while(1){
+						while( UART_RECEVED_DATA != ';' ){
+					
+							if(UART_RECEVED_DATA == 'W' || UART_RECEVED_DATA == 'w' ||  UART_RECEVED_DATA == 'U' || UART_RECEVED_DATA == 'C' || UART_RECEVED_DATA == 'c' || UART_RECEVED_DATA == 'a' || UART_RECEVED_DATA == 'E' || UART_RECEVED_DATA == 'I'){
+								break;
+							}
+					
+						}
+				
+						if(UART_RECEVED_DATA == 'W' || UART_RECEVED_DATA == 'w' ||  UART_RECEVED_DATA == 'U' || UART_RECEVED_DATA == 'C' || UART_RECEVED_DATA == 'c' || UART_RECEVED_DATA == 'a' || UART_RECEVED_DATA == 'E' || UART_RECEVED_DATA == 'I'){
+							carMode =(UART_RECEVED_DATA);
+							break;
+						}
+				
+						angle_CW(atoi(s));
+				
+						UART_RECEVED_DATA = 'A';
+				}
+			}
+			
+			else if(carMode == 'a'){
+				while(1){
+						while( UART_RECEVED_DATA != ';' ){
+					
+							if(UART_RECEVED_DATA == 'W' || UART_RECEVED_DATA == 'w' ||  UART_RECEVED_DATA == 'U' || UART_RECEVED_DATA == 'C' || UART_RECEVED_DATA == 'c' || UART_RECEVED_DATA == 'A' || UART_RECEVED_DATA == 'E' || UART_RECEVED_DATA == 'I'){
+								carMode = UART_RECEVED_DATA;
+								break;
+							}
+					
+						}
+				
+						if(UART_RECEVED_DATA == 'W' || UART_RECEVED_DATA == 'w' ||  UART_RECEVED_DATA == 'U' || UART_RECEVED_DATA == 'C' || UART_RECEVED_DATA == 'c' || UART_RECEVED_DATA == 'A' || UART_RECEVED_DATA == 'E' || UART_RECEVED_DATA == 'I'){
+							carMode =(UART_RECEVED_DATA);
+							break;
+						}
+				
+						angle_CCW(atoi(s));
+				
+						UART_RECEVED_DATA = 'a';
+				}
 			}
 			
 			else if (carMode == 'U'){
@@ -149,42 +216,41 @@ int main(void)
 				
 				while(1){
 					
-					while( UART_RECEVED_DATA == 'U' ){
-						if(arrCounter >= 3){
+					while( UART_RECEVED_DATA != ';' ){
+					
+						if(UART_RECEVED_DATA == 'W' || UART_RECEVED_DATA == 'w' || UART_RECEVED_DATA == 'C' || UART_RECEVED_DATA == 'c' || UART_RECEVED_DATA == 'A' || UART_RECEVED_DATA == 'a' || UART_RECEVED_DATA == 'E' || UART_RECEVED_DATA == 'I'){
+					
+							carMode =(UART_RECEVED_DATA);
 							break;
 						}
+						
 					}
+
+					if(UART_RECEVED_DATA == 'W' || UART_RECEVED_DATA == 'w' || UART_RECEVED_DATA == 'C' || UART_RECEVED_DATA == 'c' || UART_RECEVED_DATA == 'A' || UART_RECEVED_DATA == 'a' || UART_RECEVED_DATA == 'E' || UART_RECEVED_DATA == 'I'){
 					
-					if(UART_RECEVED_DATA == 'W' || UART_RECEVED_DATA == 'w' || UART_RECEVED_DATA == 'u'){
-						carMode =(UART_RECEVED_DATA - 48);
+						carMode =(UART_RECEVED_DATA);
 						break;
 					}
-					
-/*
-// 					while (arrCounter < 3) {
-// 						get_receivedString(UART_RECEVED_DATA);
-// 						requiredDistance = atoi(s);
-// 					}
-*/
+
 					requiredDistance = atoi(s);
-					//UART_sendByte(requiredDistance);
 					
 					if (measuredDistance < requiredDistance){
 						motorForward();
-						//UART_sendByte((char)(pulse_Counter)/255);
 					}
 					else {
+						
 					motorStop();
 					
 					pulse_Counter = 0;
 					measuredDistance = 0;
 					
 					UART_RECEVED_DATA = 'U';
-					int0_Disable;
+					
+			
 					}
 				}
 				
-				
+				int0_Disable;
 			}
 			
 			
@@ -222,19 +288,19 @@ void normalMode(char motionState){
 /* ******************* LINE FOLLOWER MODE	******************* */
 void lineFollowerMode(){
 	
-	if(IS_BIT_SET(PINC,4)&&IS_BIT_CLEAR(PINC,6))
+	if(IS_BIT_SET(PINA,2)&&IS_BIT_CLEAR(PINA,0))
 	{
 		motorLeft();
-		while(IS_BIT_CLEAR(PINC,5)&&IS_BIT_CLEAR(PINC,6))
+		while(IS_BIT_CLEAR(PINA,1)&&IS_BIT_CLEAR(PINA,0))
 		{
 			motorLeft();
 		}
 		motorForward();
 	}
-	else if (IS_BIT_CLEAR(PINC,4)&&IS_BIT_SET(PINC,6))
+	else if (IS_BIT_CLEAR(PINA,2)&&IS_BIT_SET(PINA,0))
 	{
 		motorRight();
-		while(IS_BIT_CLEAR(PINC,4)&&IS_BIT_CLEAR(PINC,5))
+		while(IS_BIT_CLEAR(PINA,2)&&IS_BIT_CLEAR(PINA,1))
 		{
 			motorRight();
 		}
@@ -247,21 +313,162 @@ void lineFollowerMode(){
 }
 
 /* ********************** CIRCLE ************************ */ 
-void Circle_CCkWise(short R){
-	float R1 = R -(0.5*CARRADIUS);
-	float ratio = ((CARRADIUS+R1)/R1);
+void Circle_CCkWise(){
+	int0_Enable;
 	
-	motorSpeedSet( (255/ratio) , 255 );
-	motorForward();
+
+	motorSpeedSet( 180 , 255 );
+	while(measuredDistance <= 628){
+		motorForward();
+	}
+	
+	motorStop();
+	
+	pulse_Counter = 0;
+	measuredDistance = 0;
+	int0_Disable;
 }
 
-void Circle_CkWise(short R){
-	float R1 = R-(0.5*CARRADIUS);
-	float ratio = ((CARRADIUS+R1)/R1);
+void Circle_CkWise(){
+	int0_Enable;
 	
-	motorSpeedSet( 255 , (255/ratio) );
-	motorForward();
+	
+	motorSpeedSet( 220 , 150 );
+	while(measuredDistance <= 628){
+		motorForward();
+	}
+	
+	motorStop();
+	
+	pulse_Counter = 0;
+	measuredDistance = 0;
+	int0_Disable;
 }
+
+void inf(){
+	Circle_CCkWise();
+	Circle_CkWise();
+}
+
+/* ********************** ANGLE ************************ */ 
+void angle_CW(uint8_t theta){
+	
+	
+	short ratio = (((0.5 * CARWIDTH) * theta * (PI / 180)) * angleFactor);
+	
+	pulse_Counter = 0;
+	measuredDistance = 0;
+	
+	int0_Enable;
+	
+	while(measuredDistance <= ratio){
+		motorRight();
+	}
+	
+	motorStop();
+	
+	int0_Disable;
+	pulse_Counter = 0;
+	measuredDistance = 0;
+}
+
+void angle_CCW(uint8_t theta){
+	
+	short ratio = (((0.5 * CARWIDTH) * theta * (PI / 180)) * angleFactor);
+	
+	pulse_Counter = 0;
+	measuredDistance = 0;
+	
+	int0_Enable;
+	
+	while(measuredDistance <= ratio){
+		motorLeft();
+	}
+	
+	motorStop();
+	
+	int0_Disable;
+	pulse_Counter = 0;
+	measuredDistance = 0;
+	
+}
+
+void rec(){
+	int0_Enable;
+	
+	while(measuredDistance <= 100){
+		motorForward();
+	}
+	motorStop();
+	
+	pulse_Counter = 0;
+	measuredDistance = 0;
+	
+	_delay_ms(1000);
+	angle_CW(75);
+	_delay_ms(1000);
+	
+	pulse_Counter = 0;
+	measuredDistance = 0;
+
+	int0_Disable;
+	int0_Enable;
+
+	while(measuredDistance <= 100){
+		motorForward();
+	}
+	motorStop();
+		
+	pulse_Counter = 0;
+	measuredDistance = 0;
+		
+	_delay_ms(1000);
+	angle_CW(75);
+	_delay_ms(1000);
+	
+	pulse_Counter = 0;
+	measuredDistance = 0;
+	
+	int0_Disable;
+	int0_Enable;
+	
+	while(measuredDistance <= 100){
+		motorForward();
+	}
+	motorStop();
+	
+	pulse_Counter = 0;
+	measuredDistance = 0;
+	
+	_delay_ms(1000);
+	angle_CW(75);
+	_delay_ms(1000);
+	
+	pulse_Counter = 0;
+	measuredDistance = 0;
+	
+	int0_Disable;
+	int0_Enable;
+	
+	while(measuredDistance <= 100){
+		motorForward();
+	}
+	motorStop();
+	
+	pulse_Counter = 0;
+	measuredDistance = 0;
+	
+	_delay_ms(1000);
+	angle_CW(75);
+	_delay_ms(1000);
+	
+	pulse_Counter = 0;
+	measuredDistance = 0;
+	
+	int0_Disable;
+}
+
+
 
 /* ********************** Interrupts ************************ */ 
 
@@ -269,80 +476,20 @@ void Circle_CkWise(short R){
 ISR(USART_RXC_vect)
 {
 	UART_RECEVED_DATA = UDR;
-	
-	if(UART_RECEVED_DATA <= 57 && UART_RECEVED_DATA >= 48){
-		s[arrCounter] = UART_RECEVED_DATA;
-		if(arrCounter == 2){
-			s[arrCounter] = '\0';
-		}else {
-			arrCounter++;
+
+
+	if((carMode == 'U' || carMode == 'a' || carMode == 'A') && ((UART_RECEVED_DATA <= '9' && UART_RECEVED_DATA >= '0') || UART_RECEVED_DATA == ';')){
+		s[arrCounter++] = UART_RECEVED_DATA;
+		if(s[(arrCounter-1)] == ';'){
+			s[(arrCounter-1)] = '\0';
+			arrCounter = 0;
 		}
 	}
 }
 
 ISR (INT0_vect)
 {
-
-
 		pulse_Counter++;
 		measuredDistance = (pulse_Counter * 5 / (14.0));
-		
-
 }
-
-/*
-// void get_receivedString(uint8_t c) {
-// 		if (c != '0') {
-// 			s[arrCounter] = c;
-// 			arrCounter++;
-// 		}
-// 		else {
-// 			s[arrCounter] = '\0';
-// 
-// 		} 
-// 		if (arrCounter == 3) arrCounter = 0;
-// 		
-// }
-*/
-		
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
